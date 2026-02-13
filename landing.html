@@ -7,18 +7,30 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
             font-family: 'Inter', sans-serif;
             background: #0a0a0a;
             color: #fff;
             overflow-x: hidden;
         }
-        .serif { font-family: 'Cormorant Garamond', serif; }
         
+        .serif {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        /* Animated gradient background */
         .gradient-bg {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
             background: 
                 radial-gradient(ellipse at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
@@ -34,15 +46,20 @@
             66% { transform: translate(-20px, 20px) scale(0.95); }
         }
         
+        /* Noise texture overlay */
         .noise {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -1;
             opacity: 0.03;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
             pointer-events: none;
         }
         
+        /* Hero section */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -71,7 +88,8 @@
         
         .hero-badge::before {
             content: '';
-            width: 6px; height: 6px;
+            width: 6px;
+            height: 6px;
             background: #4ade80;
             border-radius: 50%;
             animation: pulse 2s infinite;
@@ -105,10 +123,17 @@
         }
         
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
+        /* CTA Button */
         .cta-btn {
             display: inline-flex;
             align-items: center;
@@ -137,9 +162,11 @@
             transform: translateX(4px);
         }
         
+        /* Preview images floating */
         .floating-images {
             position: absolute;
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             overflow: hidden;
         }
@@ -152,10 +179,37 @@
             animation: float 6s ease-in-out infinite;
         }
         
-        .float-img:nth-child(1) { width: 200px; height: 250px; top: 15%; left: 8%; animation-delay: 0s; }
-        .float-img:nth-child(2) { width: 180px; height: 220px; top: 60%; left: 5%; animation-delay: 1s; }
-        .float-img:nth-child(3) { width: 220px; height: 280px; top: 10%; right: 8%; animation-delay: 2s; }
-        .float-img:nth-child(4) { width: 190px; height: 240px; top: 55%; right: 5%; animation-delay: 1.5s; }
+        .float-img:nth-child(1) {
+            width: 200px;
+            height: 250px;
+            top: 15%;
+            left: 8%;
+            animation-delay: 0s;
+        }
+        
+        .float-img:nth-child(2) {
+            width: 180px;
+            height: 220px;
+            top: 60%;
+            left: 5%;
+            animation-delay: 1s;
+        }
+        
+        .float-img:nth-child(3) {
+            width: 220px;
+            height: 280px;
+            top: 10%;
+            right: 8%;
+            animation-delay: 2s;
+        }
+        
+        .float-img:nth-child(4) {
+            width: 190px;
+            height: 240px;
+            top: 55%;
+            right: 5%;
+            animation-delay: 1.5s;
+        }
         
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -163,10 +217,12 @@
         }
         
         .float-img img {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
         
+        /* Stats bar */
         .stats {
             display: flex;
             justify-content: center;
@@ -177,10 +233,24 @@
             animation: fadeInUp 1s ease-out 1s both;
         }
         
-        .stat { text-align: center; }
-        .stat-number { font-size: 2.5rem; font-weight: 300; margin-bottom: 0.25rem; }
-        .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.5); }
+        .stat {
+            text-align: center;
+        }
         
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        /* How it works section */
         .how-it-works {
             padding: 8rem 2rem;
             max-width: 1200px;
@@ -215,7 +285,8 @@
         }
         
         .step-number {
-            width: 60px; height: 60px;
+            width: 60px;
+            height: 60px;
             border: 1px solid rgba(255,255,255,0.2);
             border-radius: 50%;
             display: flex;
@@ -226,9 +297,19 @@
             color: rgba(255,255,255,0.6);
         }
         
-        .step h3 { font-size: 1.25rem; margin-bottom: 0.75rem; font-weight: 400; }
-        .step p { color: rgba(255,255,255,0.5); font-size: 0.95rem; line-height: 1.6; }
+        .step h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            font-weight: 400;
+        }
         
+        .step p {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        
+        /* Categories preview */
         .categories {
             padding: 6rem 2rem;
             background: rgba(255,255,255,0.02);
@@ -251,15 +332,20 @@
             transition: transform 0.3s ease;
         }
         
-        .category-card:hover { transform: scale(1.02); }
+        .category-card:hover {
+            transform: scale(1.02);
+        }
         
         .category-card img {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             transition: transform 0.5s ease;
         }
         
-        .category-card:hover img { transform: scale(1.1); }
+        .category-card:hover img {
+            transform: scale(1.1);
+        }
         
         .category-overlay {
             position: absolute;
@@ -270,8 +356,12 @@
             padding: 1.5rem;
         }
         
-        .category-name { font-size: 1.1rem; font-weight: 500; }
+        .category-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
         
+        /* Responsive */
         @media (max-width: 768px) {
             .floating-images { display: none; }
             .stats { flex-direction: column; gap: 2rem; }
@@ -285,13 +375,23 @@
     <div class="gradient-bg"></div>
     <div class="noise"></div>
     
+    <!-- Floating preview images -->
     <div class="floating-images">
-        <div class="float-img"><img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=400&h=500&fit=crop" alt="Activewear"></div>
-        <div class="float-img"><img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=500&fit=crop" alt="Cosmetics"></div>
-        <div class="float-img"><img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=500&fit=crop" alt="Perfume"></div>
-        <div class="float-img"><img src="https://images.unsplash.com/photo-1622484211829-087879988d4c?w=400&h=500&fit=crop" alt="Food"></div>
+        <div class="float-img">
+            <img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=400&h=500&fit=crop" alt="Activewear">
+        </div>
+        <div class="float-img">
+            <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=500&fit=crop" alt="Cosmetics">
+        </div>
+        <div class="float-img">
+            <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&h=500&fit=crop" alt="Perfume">
+        </div>
+        <div class="float-img">
+            <img src="https://images.unsplash.com/photo-1622484211829-087879988d4c?w=400&h=500&fit=crop" alt="Food">
+        </div>
     </div>
     
+    <!-- Hero Section -->
     <section class="hero">
         <div class="hero-badge">Free Product Photography Prompts</div>
         <h1 class="serif">
@@ -326,6 +426,7 @@
         </div>
     </section>
     
+    <!-- How It Works -->
     <section class="how-it-works">
         <div class="section-title">
             <h2 class="serif">How It Works</h2>
@@ -350,6 +451,7 @@
         </div>
     </section>
     
+    <!-- Categories Preview -->
     <section class="categories">
         <div class="section-title">
             <h2 class="serif">Browse by Category</h2>
@@ -358,19 +460,27 @@
         <div class="categories-grid">
             <div class="category-card" onclick="location.href='gallery.html?filter=activewear'">
                 <img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=600&h=600&fit=crop" alt="Activewear">
-                <div class="category-overlay"><span class="category-name">Activewear</span></div>
+                <div class="category-overlay">
+                    <span class="category-name">Activewear</span>
+                </div>
             </div>
             <div class="category-card" onclick="location.href='gallery.html?filter=cosmetics'">
                 <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=600&fit=crop" alt="Cosmetics">
-                <div class="category-overlay"><span class="category-name">Cosmetics</span></div>
+                <div class="category-overlay">
+                    <span class="category-name">Cosmetics</span>
+                </div>
             </div>
             <div class="category-card" onclick="location.href='gallery.html?filter=protein'">
                 <img src="https://images.unsplash.com/photo-1622484211829-087879988d4c?w=600&h=600&fit=crop" alt="Supplements">
-                <div class="category-overlay"><span class="category-name">Supplements</span></div>
+                <div class="category-overlay">
+                    <span class="category-name">Supplements</span>
+                </div>
             </div>
             <div class="category-card" onclick="location.href='gallery.html?filter=food'">
                 <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&h=600&fit=crop" alt="Food & Bev">
-                <div class="category-overlay"><span class="category-name">Food & Beverage</span></div>
+                <div class="category-overlay">
+                    <span class="category-name">Food & Beverage</span>
+                </div>
             </div>
         </div>
         <div style="text-align: center; margin-top: 3rem;">
@@ -383,6 +493,7 @@
         </div>
     </section>
     
+    <!-- Footer -->
     <footer style="padding: 4rem 2rem; text-align: center; border-top: 1px solid rgba(255,255,255,0.1);">
         <p style="color: rgba(255,255,255,0.4); font-size: 0.9rem;">
             BrandPrompt — Free AI Product Photography Prompts<br>

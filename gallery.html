@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrandPrompt Gallery - AI Product Photography Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+        }
+        .serif { font-family: 'Cormorant Garamond', serif; }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 4px;
+        }
+        
+        .image-card {
+            aspect-ratio: 4/5;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .image-card img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .image-card:hover img { transform: scale(1.05); }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.98);
+            z-index: 50;
+            overflow-y: auto;
+        }
+        
+        .modal.active { display: flex; }
+        
+        .prompt-box {
+            background: #1a1a1a;
+            border-left: 3px solid #fff;
+        }
+        
+        .filter-btn {
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: #fff;
+            color: #0a0a0a;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in { animation: fadeIn 0.6s ease-out forwards; }
+    </style>
+</head>
+<body>
+    <header class="fixed top-0 left-0 right-0 bg-[#0a0a0a]/95 backdrop-blur-md z-40 border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <a href="index.html" class="serif text-2xl font-medium tracking-tight">BrandPrompt</a>
+            <p class="text-sm text-white/50 hidden sm:block">AI Product Photography Library</p>
+        </div>
+    </header>
+
+    <div class="fixed top-[65px] left-0 right-0 bg-[#0a0a0a] border-b border-white/10 z-30">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide" id="filterContainer">
+                <button class="filter-btn active px-4 py-2 text-sm border border-white/20 rounded-full whitespace-nowrap text-white" data-filter="all">All</button>
+                <button class="filter-btn px-4 py-2 text-sm border border-white/20 rounded-full whitespace-nowrap text-white" data-filter="activewear">Activewear</button>
+                <button class="filter-btn px-4 py-2 text-sm border border-white/20 rounded-full whitespace-nowrap text-white" data-filter="protein">Protein Bars</button>
+                <button class="filter-btn px-4 py-2 text-sm border border-white/20 rounded-full whitespace-nowrap text-white" data-filter="cosmetics">Cosmetics</button>
+                <button class="filter-btn px-4 py-2 text-sm border border-white/20 rounded-full whitespace-nowrap text-white" data-filter="food">Food & Beverage</button>
+                <button class="filter-btn px-4 py-2 text-sm border border-white/20 rounded-full whitespace-nowrap text-white" data-filter="tech">Tech</button>
+                <button class="filter-btn px-4 py-2 text-sm border border-white/20 rounded-full whitespace-nowrap text-white" data-filter="fashion">Fashion</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="pt-36">
+        <div class="image-grid" id="imageGrid"></div>
+    </main>
+
+    <div class="modal" id="modal">
+        <div class="w-full max-w-6xl mx-auto p-6 md:p-12 flex flex-col lg:flex-row gap-8 items-start">
+            <button onclick="closeModal()" class="absolute top-6 right-6 text-white/60 hover:text-white text-4xl font-light">&times;</button>
+            
+            <div class="w-full lg:w-1/2">
+                <img id="modalImage" src="" alt="" class="w-full h-auto rounded-sm">
+            </div>
+            
+            <div class="w-full lg:w-1/2 text-white space-y-6">
+                <div>
+                    <p class="text-white/40 text-sm uppercase tracking-wider mb-2">Category</p>
+                    <p id="modalCategory" class="text-lg"></p>
+                </div>
+                
+                <div class="prompt-box p-6 rounded-sm">
+                    <p class="text-white/40 text-sm uppercase tracking-wider mb-3">Prompt</p>
+                    <p id="modalPrompt" class="text-white/90 leading-relaxed"></p>
+                    <button onclick="copyPrompt()" class="mt-4 text-sm text-white/60 hover:text-white underline underline-offset-4">Copy Prompt</button>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <p class="text-white/40 text-sm uppercase tracking-wider mb-2">Camera</p>
+                        <p id="modalCamera" class="text-sm text-white/80"></p>
+                    </div>
+                    <div>
+                        <p class="text-white/40 text-sm uppercase tracking-wider mb-2">Lighting</p>
+                        <p id="modalLighting" class="text-sm text-white/80"></p>
+                    </div>
+                    <div>
+                        <p class="text-white/40 text-sm uppercase tracking-wider mb-2">Background</p>
+                        <p id="modalBackground" class="text-sm text-white/80"></p>
+                    </div>
+                    <div>
+                        <p class="text-white/40 text-sm uppercase tracking-wider mb-2">Style</p>
+                        <p id="modalStyle" class="text-sm text-white/80"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const images = [
+            {
+                id: 1,
+                category: "activewear",
+                src: "https://images.unsplash.com/photo-1518310383802-640c2de311b2?w=800&h=1000&fit=crop",
+                prompt: "Premium athletic wear product shot, black sports bra and leggings on invisible mannequin, dramatic side lighting creating strong shadows, dark charcoal background, high-end fashion photography style, sharp focus on fabric texture, 8k resolution, commercial photography",
+                camera: "Sony A7R IV, 85mm f/1.8, ISO 100",
+                lighting: "Studio strobe with softbox, 45° angle",
+                background: "Seamless dark gray paper",
+                style: "Minimalist, high contrast"
+            },
+            {
+                id: 2,
+                category: "protein",
+                src: "https://images.unsplash.com/photo-1622484211829-087879988d4c?w=800&h=1000&fit=crop",
+                prompt: "Protein bar commercial photography, broken bar showing chocolate interior texture, scattered protein crisps and cocoa powder, warm golden hour lighting, rustic wood surface, shallow depth of field, appetizing food photography, premium packaging visible",
+                camera: "Canon EOS R5, 100mm macro, f/2.8",
+                lighting: "Natural window light from left, gold reflector",
+                background: "Weathered oak table",
+                style: "Lifestyle, warm tones"
+            },
+            {
+                id: 3,
+                category: "cosmetics",
+                src: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&h=1000&fit=crop",
+                prompt: "Luxury skincare product photography, frosted glass serum bottle with gold dropper, water droplets on surface, soft diffused lighting, marble background with eucalyptus leaves, high-end beauty campaign aesthetic, rose gold accents",
+                camera: "Phase One XF, 120mm macro, f/8",
+                lighting: "Large softbox overhead, subtle rim light",
+                background: "White marble slab",
+                style: "Clean, luxury, minimal"
+            },
+            {
+                id: 4,
+                category: "food",
+                src: "https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=800&h=1000&fit=crop",
+                prompt: "Artisan coffee product photography, ceramic cup with perfect latte art, steam rising, coffee beans scattered artfully, morning light streaming in, cozy cafe atmosphere, rich browns and warm tones, commercial advertising style",
+                camera: "Nikon Z7 II, 50mm f/1.4, ISO 400",
+                lighting: "Morning sunlight, diffused through sheer curtain",
+                background: "Weathered wood with linen napkin",
+                style: "Cozy, lifestyle, warm"
+            },
+            {
+                id: 5,
+                category: "tech",
+                src: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800&h=1000&fit=crop",
+                prompt: "Minimalist wireless earbuds product shot, matte black finish, floating in space with subtle shadow, gradient background from dark gray to black, dramatic rim lighting highlighting contours, tech product photography, premium feel",
+                camera: "Sony A1, 90mm macro, f/11",
+                lighting: "Two strip lights for rim, one soft fill",
+                background: "Gradient seamless paper",
+                style: "Minimal, futuristic, sleek"
+            },
+            {
+                id: 6,
+                category: "fashion",
+                src: "https://images.unsplash.com/photo-1558171813-4c088753af8f?w=800&h=1000&fit=crop",
+                prompt: "Designer leather handbag product photography, structured tan leather with gold hardware, placed on concrete pedestal, brutalist architecture background, harsh sunlight creating strong shadows, editorial fashion campaign style",
+                camera: "Hasselblad X2D, 80mm f/2.8",
+                lighting: "Hard sunlight, midday",
+                background: "Raw concrete and modern architecture",
+                style: "Editorial, architectural, bold"
+            },
+            {
+                id: 7,
+                category: "activewear",
+                src: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800&h=1000&fit=crop",
+                prompt: "High-performance running shoes floating in air, dynamic angle showing sole technology, dramatic studio lighting with blue accent lights, black background with subtle gradient, motion blur on laces, sports advertising style",
+                camera: "Canon EOS R3, 24-70mm f/2.8",
+                lighting: "Studio strobes with blue gels",
+                background: "Black infinity curve",
+                style: "Dynamic, energetic, bold"
+            },
+            {
+                id: 8,
+                category: "cosmetics",
+                src: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&h=1000&fit=crop",
+                prompt: "Premium perfume bottle photography, crystal clear glass with amber liquid, golden hour lighting creating caustic light patterns, silk fabric draped nearby, luxury fragrance campaign, soft focus background, warm golden tones",
+                camera: "Leica SL2, 75mm f/2, ISO 200",
+                lighting: "Golden hour sun, reflector fill",
+                background: "Chiffon fabric in warm tones",
+                style: "Luxury, soft, feminine"
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        function renderImages() {
+            const grid = document.getElementById('imageGrid');
+            grid.innerHTML = '';
+            
+            const filtered = currentFilter === 'all' 
+                ? images 
+                : images.filter(img => img.category === currentFilter);
+            
+            filtered.forEach((img, index) => {
+                const card = document.createElement('div');
+                card.className = 'image-card fade-in';
+                card.style.animationDelay = `${index * 0.05}s`;
+                card.onclick = () => openModal(img);
+                card.innerHTML = `<img src="${img.src}" alt="${img.category}" loading="lazy">`;
+                grid.appendChild(card);
+            });
+        }
+
+        function openModal(img) {
+            document.getElementById('modalImage').src = img.src;
+            document.getElementById('modalCategory').textContent = img.category.charAt(0).toUpperCase() + img.category.slice(1);
+            document.getElementById('modalPrompt').textContent = img.prompt;
+            document.getElementById('modalCamera').textContent = img.camera;
+            document.getElementById('modalLighting').textContent = img.lighting;
+            document.getElementById('modalBackground').textContent = img.background;
+            document.getElementById('modalStyle').textContent = img.style;
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function copyPrompt() {
+            const prompt = document.getElementById('modalPrompt').textContent;
+            navigator.clipboard.writeText(prompt);
+            alert('Prompt copied to clipboard!');
+        }
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderImages();
+            });
+        });
+
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Check URL params for filter
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterParam = urlParams.get('filter');
+        if (filterParam) {
+            const filterBtn = document.querySelector(`[data-filter="${filterParam}"]`);
+            if (filterBtn) {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                filterBtn.classList.add('active');
+                currentFilter = filterParam;
+            }
+        }
+
+        renderImages();
+    </script>
+</body>
+</html>
